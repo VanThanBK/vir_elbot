@@ -24,10 +24,7 @@ export default function Home() {
   }, []);
 
   const handleSerialDataReceived = useCallback((newJointStates: JointState) => {
-    setJointStates(prev => ({
-      ...prev,
-      ...newJointStates
-    }));
+    setJointStates(newJointStates);
   }, []);
 
   return (

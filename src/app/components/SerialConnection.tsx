@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { JointState } from '../types/robot';
 
 interface SerialConnectionProps {
@@ -18,13 +18,8 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
   const [autoSend, setAutoSend] = useState(false);
   const [commandBuffer, setCommandBuffer] = useState<string>('');
   const [isMoving, setIsMoving] = useState(false);
-  const [currentJointStates, setCurrentJointStates] = useState<JointState>({
-    theta1: 0,
-    theta2: 0,
-    theta3: 0,
-    theta4: 0,
-    theta5: 0,
-    theta6: 0,
+  const currentPositionRef = useRef<JointState>({
+    theta1: 0, theta2: 0, theta3: 0, theta4: 0, theta5: 0, theta6: 0
   });
 
   // Check if Web Serial API is supported - use state to avoid hydration mismatch
@@ -89,7 +84,8 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
     if (isMoving || !onDataReceived) return;
 
     setIsMoving(true);
-    const startStates = { ...jointStates };
+    // Use current position from ref (most up-to-date)
+    const startStates = { ...currentPositionRef.current };
     const startTime = Date.now();
 
     // Calculate movement duration based on feed rate and maximum angle difference
@@ -102,18 +98,14 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
     );
     
     // Duration calculation: feedRate is degrees/minute
-    // Time = angle / speed = degrees / (degrees/minute) = minutes
-    // Convert to milliseconds
     const durationMinutes = maxAngleDiffDeg / feedRate;
     const duration = Math.max(100, durationMinutes * 60 * 1000); // Minimum 100ms
-    
-    addToLog(`Movement duration: ${duration.toFixed(0)}ms for ${maxAngleDiffDeg.toFixed(1)}° at ${feedRate}°/min`);
 
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Linear movement (no easing for more predictable timing)
+      // Linear movement
       const currentStates: JointState = {};
       
       Object.keys(targetStates).forEach(joint => {
@@ -122,17 +114,21 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
         currentStates[joint] = start + (target - start) * progress;
       });
 
+      // Update ref immediately for next animation
+      currentPositionRef.current = currentStates;
       onDataReceived(currentStates);
 
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
+        // Update final position
+        currentPositionRef.current = targetStates;
+        onDataReceived(targetStates);
         setIsMoving(false);
         addToLog('Movement completed');
-        // Send "Ok" response when movement is complete
         setTimeout(() => {
           sendOkResponse();
-        }, 50); // Small delay to ensure state is updated
+        }, 50);
       }
     };
 
@@ -266,6 +262,13 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
       addToLog(`Send error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
+
+  // Sync ref with manual joint control changes
+  useEffect(() => {
+    if (!isMoving) {
+      currentPositionRef.current = { ...jointStates };
+    }
+  }, [jointStates, isMoving]);
 
   // Auto-send joint states when they change (if enabled)
   useEffect(() => {
@@ -404,4 +407,11 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
           <div className="text-xs text-blue-600 space-y-1">
             <div><strong>Baud Rate:</strong> 115200</div>
             <div><strong>Receive Format:</strong> G06 X100.0 Y100.0 Z100.0 W100.0 U100.0 V100.0 F500</div>
-            <div><strong>Send Response:</strong> Ok (after movement co
+            <div><strong>Send Response:</strong> Ok (after movement complete)</div>
+            <div><strong>Joint Mapping:</strong> X=θ1, Y=θ2, Z=θ3, W=θ4, U=θ5, V=θ6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
