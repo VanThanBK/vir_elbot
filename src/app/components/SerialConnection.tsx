@@ -105,13 +105,53 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Linear movement
+      // Linear movement with joint limits check
       const currentStates: JointState = {};
+      
+      // Joint limits in radians
+      const jointLimits = {
+        theta1: { min: -170 * Math.PI / 180, max: 170 * Math.PI / 180 },
+        theta2: { min: -100 * Math.PI / 180, max: 130 * Math.PI / 180 },
+        theta3: { min: -90 * Math.PI / 180, max: 75 * Math.PI / 180 },
+        theta4: { min: -180 * Math.PI / 180, max: 180 * Math.PI / 180 },
+        theta5: { min: -120 * Math.PI / 180, max: 120 * Math.PI / 180 },
+        theta6: { min: -360 * Math.PI / 180, max: 360 * Math.PI / 180 }
+      };
       
       Object.keys(targetStates).forEach(joint => {
         const start = startStates[joint] || 0;
         const target = targetStates[joint] || 0;
-        currentStates[joint] = start + (target - start) * progress;
+        const limits = jointLimits[joint as keyof typeof jointLimits];
+        
+        if (limits) {
+          // Calculate direct path
+          let directPath = start + (target - start) * progress;
+          
+          // Check if direct path violates limits
+          if (directPath < limits.min || directPath > limits.max) {
+            // Try alternative path (going the other way around)
+            let altTarget = target;
+            if (target - start > Math.PI) {
+              altTarget = target - 2 * Math.PI;
+            } else if (start - target > Math.PI) {
+              altTarget = target + 2 * Math.PI;
+            }
+            
+            let altPath = start + (altTarget - start) * progress;
+            
+            // Use alternative path if it's within limits
+            if (altPath >= limits.min && altPath <= limits.max) {
+              currentStates[joint] = altPath;
+            } else {
+              // Clamp to limits if both paths violate
+              currentStates[joint] = Math.max(limits.min, Math.min(limits.max, directPath));
+            }
+          } else {
+            currentStates[joint] = directPath;
+          }
+        } else {
+          currentStates[joint] = start + (target - start) * progress;
+        }
       });
 
       // Update ref immediately for next animation
@@ -126,9 +166,13 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
         onDataReceived(targetStates);
         setIsMoving(false);
         addToLog('Movement completed');
-        setTimeout(() => {
+        
+        // Send Ok response immediately
+        if (writer && isConnected) {
           sendOkResponse();
-        }, 50);
+        } else {
+          addToLog('Warning: Cannot send Ok response - connection issue');
+        }
       }
     };
 
@@ -229,6 +273,7 @@ export default function SerialConnection({ jointStates, onDataReceived }: Serial
 
   const sendOkResponse = async () => {
     if (!writer || !isConnected) {
+      addToLog('Cannot send Ok: Not connected or writer not available');
       return;
     }
 
