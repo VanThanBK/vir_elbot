@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Elbot_ros">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.00295941310288482 -0.00743196833930476 0.126764065183437"
+        rpy="0 0 0" />
+      <mass
+        value="7.80883668381517" />
+      <inertia
+        ixx="0.0420498245916264"
+        ixy="-2.79755768999179E-08"
+        ixz="-0.000422848006205079"
+        iyy="0.0424801251330047"
+        iyz="-9.64120177077388E-09"
+        izz="0.0245930353705393" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="arm1_Link">
+    <inertial>
+      <origin
+        xyz="-0.025031781835328 -0.00487268478781618 0.100589091463699"
+        rpy="0 0 0" />
+      <mass
+        value="0.48129436892084" />
+      <inertia
+        ixx="0.00117430008000726"
+        ixy="7.92805799825543E-07"
+        ixz="-1.05282603904915E-06"
+        iyy="0.00170833545313737"
+        iyz="-2.23208037140393E-06"
+        izz="0.00117694469735702" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm1_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm1_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta1"
+    type="continuous">
+    <origin
+      xyz="0.0069442 0 0.28692"
+      rpy="-0.024206 0 -1.5708" />
+    <parent
+      link="base_link" />
+    <child
+      link="arm1_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="arm2_Link">
+    <inertial>
+      <origin
+        xyz="2.19305339069914E-06 0.228629335109454 0.0161610974740906"
+        rpy="0 0 0" />
+      <mass
+        value="0.224698285954227" />
+      <inertia
+        ixx="0.000235973349843661"
+        ixy="8.51433943582718E-09"
+        ixz="-1.25761263181806E-08"
+        iyy="0.000253881675123096"
+        iyz="-1.33902215548025E-05"
+        izz="0.000429628860315079" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm2_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm2_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta2"
+    type="continuous">
+    <origin
+      xyz="-0.025 0.091 0.1005"
+      rpy="1.5708 -0.0024813 -3.1416" />
+    <parent
+      link="arm1_Link" />
+    <child
+      link="arm2_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="arm3_Link">
+    <inertial>
+      <origin
+        xyz="5.50885703692883E-07 3.24750299873777E-07 0.0942813065708078"
+        rpy="0 0 0" />
+      <mass
+        value="0.235252200197637" />
+      <inertia
+        ixx="0.000297517377036216"
+        ixy="1.88010496883117E-09"
+        ixz="-7.23216666910942E-10"
+        iyy="0.000297533754403789"
+        iyz="6.23877800862736E-10"
+        izz="0.000533086493132978" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm3_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm3_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta3"
+    type="continuous">
+    <origin
+      xyz="0 0.6 0"
+      rpy="3.1415 -7.7002E-05 3.1412" />
+    <parent
+      link="arm2_Link" />
+    <child
+      link="arm3_Link" />
+    <axis
+      xyz="-9.0662E-05 -0.00012137 1" />
+  </joint>
+  <link
+    name="arm4_Link">
+    <inertial>
+      <origin
+        xyz="7.69592982915231E-07 1.75521031264836E-06 0.14118874058488"
+        rpy="0 0 0" />
+      <mass
+        value="1.48290073892508" />
+      <inertia
+        ixx="0.0063733151684906"
+        ixy="1.13369248561194E-09"
+        ixz="-5.32334993831461E-08"
+        iyy="0.00637331428665315"
+        iyz="-1.11766578894513E-07"
+        izz="0.000734863912968276" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm4_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm4_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta4"
+    type="continuous">
+    <origin
+      xyz="-0.139328001364006 0.100000049714036 0.0930033042364249"
+      rpy="3.14159265358979 1.5707963267949 0" />
+    <parent
+      link="arm3_Link" />
+    <child
+      link="arm4_Link" />
+    <axis
+      xyz="0 0 0.999999999962565" />
+  </joint>
+  <link
+    name="arm5_Link">
+    <inertial>
+      <origin
+        xyz="-0.0382958184594028 1.69025638931952E-05 0.0360125184128005"
+        rpy="0 0 0" />
+      <mass
+        value="0.292551415172904" />
+      <inertia
+        ixx="0.000190330052195625"
+        ixy="4.20379213760693E-07"
+        ixz="3.33221181951922E-07"
+        iyy="0.000204819861234067"
+        iyz="-1.06268804786346E-07"
+        izz="0.000303621539321977" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm5_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm5_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta5"
+    type="continuous">
+    <origin
+      xyz="0.0360031369350031 0 0.457746768693452"
+      rpy="1.19658489760141 1.57077884093144 -1.94500775593408" />
+    <parent
+      link="arm4_Link" />
+    <child
+      link="arm5_Link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="arm6_Link">
+    <inertial>
+      <origin
+        xyz="1.98640850213039E-07 -0.000138218519929802 0.00216138199384996"
+        rpy="0 0 0" />
+      <mass
+        value="0.0290061921693198" />
+      <inertia
+        ixx="1.03433141143914E-05"
+        ixy="-6.18382345917164E-12"
+        ixz="1.89059954303282E-12"
+        iyy="1.0472342349351E-05"
+        iyz="-6.47228188158355E-10"
+        izz="2.03986639183088E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm6_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.674509803921569 0.709803921568627 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="meshes/arm6_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="theta6"
+    type="continuous">
+    <origin
+      xyz="-0.0919195413583693 -1.26370777393525E-05 0.0357989985495665"
+      rpy="1.5707963267949 0 -1.5707963267949" />
+    <parent
+      link="arm5_Link" />
+    <child
+      link="arm6_Link" />
+    <axis
+      xyz="0 0 0.999999999999926" />
+  </joint>
+</robot>
